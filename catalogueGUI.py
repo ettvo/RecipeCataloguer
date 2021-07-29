@@ -88,7 +88,7 @@ def foodInfo():
 Label(f2, text="Hello, {name}!".format(name = name) + '\n' + "Please enter your food preferences below." 
     + '\n' + "Be sure to seperate each entry with a comma (ex. chicken, salad).").grid(row=0)
 Label(f2, 
-        text="Name").grid(row=1)
+        text="Food Preferences").grid(row=1)
 e1 = Entry(f2)
 e1.grid(row=1, column=1)
 Button(f2, 
@@ -104,17 +104,3 @@ Button(f2,
                                                     pady=4)
 raise_frame(f1)
 master.mainloop()
-
-'''
-Button(f1, text='Go to frame 2', command=lambda:raise_frame(f2)).pack()
-Label(f1, text='FRAME 1').pack()
-
-Label(f2, text='FRAME 2').pack()
-Button(f2, text='Go to frame 3', command=lambda:raise_frame(f3)).pack()
-
-Label(f3, text='FRAME 3').pack(side='left')
-Button(f3, text='Go to frame 4', command=lambda:raise_frame(f4)).pack(side='left')
-
-Label(f4, text='FRAME 4').pack()
-Button(f4, text='Goto to frame 1', command=lambda:raise_frame(f1)).pack()'''
-
