@@ -18,8 +18,8 @@ def stateOfDay():
 def raise_frame(frame):
     frame.tkraise()
 
-f1 = Frame(master)
-f2 = Frame(master)
+f1 = Frame(master) #start
+f2 = Frame(master) #food preferences
 f3 = Frame(master)
 f4 = Frame(master)
 
@@ -77,7 +77,7 @@ Button(f1,
                                                     sticky=W, 
                                                     pady=4)
 
-# Prompts for favorite cuisin (Chinese, Indian, etc...)
+# Prompts for favorite cuisine (Chinese, Indian, etc...)
 def cuisinePreferencesFrame():
     None
 

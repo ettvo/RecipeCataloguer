@@ -63,7 +63,7 @@ def delish_recipe_scrape(recipe):
         item = line.find("span", {"class":"ingredient-description"})
         #ingredients.append((amount, item))
         if amount and item:
-            amount = re.match("^[(<p>)(</p>)]", str(amount))
+            amount = amount.contents[0]
             print("Amount: ", amount)
             ingredients.append((amount, item))
         else:

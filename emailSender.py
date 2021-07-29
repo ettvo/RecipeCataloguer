@@ -8,7 +8,6 @@ from datetime import date
 import smtplib, ssl, calendar
 
 def createMail(name, recipe):
-
     # TO-DO : Create a hashmap that contains user ID, name, and email
     weekday = calendar.day_name[date.today().weekday()]
     # Replace w dictionaries later
@@ -34,3 +33,4 @@ def createMail(name, recipe):
         server.login(sender_email, password) #logs into sender_email on gmail.com
         server.sendmail(sender_email, receiver_email, message) #sends a simple message to receiver with a subject line and plain text
 
+createMail("Karyn", "chicken")
