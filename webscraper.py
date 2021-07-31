@@ -68,7 +68,6 @@ def delish_recipe_scrape(recipe):
             ingredients.append((amount, item))
         else:
             ingredients.append((item).contents[0])
-        
         print("Item: ", item.contents[0])
             # cannot have amount without item
         # need to account for some not having ingredient numbers (ex: "Chopped fresh parsley, for serving")
