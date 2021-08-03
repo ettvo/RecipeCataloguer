@@ -15,24 +15,32 @@ class Recipe():
         self.website = web
         # may be "delish", "all_recipes"
         self.favorite = False
-        attributes = self.get_specifics()
-        self.ingredients = attributes[0]
-        self.prep_time = attributes[1]
-        self.total_time = attributes[2]
-        self.servings = attributes[3]
-        self.directions = attributes[4]
+        # attributes = self.get_specifics()
+        # self.ingredients = attributes[0]
+        # self.prep_time = attributes[1]
+        # self.total_time = attributes[2]
+        # self.servings = attributes[3]
+        # self.directions = attributes[4]
+        # attributes stored in terms of int / minutes (not mixed time) to make searching by longest time easier
 
     def get_specifics(self):
         # need to connect this to the recipe scrape
         # should change to recipe scrape to get everything (ex: prep time, serving, ingredients, etc.)
         # should be run when actually getting recipe information to run faster
         if self.website == "delish":
-            print('y')
-            return delish_recipe_scrape(self.link)
+            attributes = delish_recipe_scrape(self.link)
         elif self.website == "all_recipes":
             print("not yet implemented")
         else:
             print("not yet implemented")
+        self.ingredients = attributes[0]
+        self.prep_time = attributes[1]
+        self.total_time = attributes[2]
+        self.servings = attributes[3]
+        self.directions = attributes[4]
+
+    def get_link(self):
+        return self.link
 
     def change_favorite(self):
         # change favorite status
@@ -181,18 +189,17 @@ def delish_search_scrape(keywords, recipe_bank):
     #    print(recipe)
 
 def delish_recipe_scrape(delish_link):
-    recipe_url = delish_link
-    recipe_pull = urlopen(recipe_url)
+    recipe_pull = urlopen(delish_link)
     recipe_text = Soup(recipe_pull.read(), "html.parser")
     recipe_pull.close()
-
     ingredients = []
+    # gets ingredient details
     for line in recipe_text.find_all("div", {"class":"ingredient-item"}):
         amount = line.find("span", {"class":"ingredient-amount"})
         item = line.find("span", {"class":"ingredient-description"})
         if amount and item:
             # amount = re.sub(r'[\s\n]', '', amount.contents[0])
-            number = re.sub(r'[a-zA-Z\s\.]', '', amount.contents[0])
+            number = int(re.sub(r'[a-zA-Z\s\.]', '', amount.contents[0]))
             unit = re.sub(r'[0-9\s/]', '', amount.contents[0])
             # how to deal with imbedded measurements? (ex: boneless skinless chicken breasts (about 1 ¼ lbs), cut in half lengthwise)
             # need to account for no measurement type (ex:v= 3 boneless skinless chicken breasts (about 1 ¼ lbs), cut in half lengthwise)
@@ -206,21 +213,42 @@ def delish_recipe_scrape(delish_link):
         # need to account for some not having ingredient numbers (ex: "Chopped fresh parsley, for serving")
         #print(line)
 
+    # gets time-based details and serving details
     for line in recipe_text.find_all("div", {"class": "recipe-details-container"}):
-        prep_time = line.find("span", {"class":"recipe-details-item prep-time"}).find("span", {"class": "prep-time-amount"})
+        # prep_time = line.find("span", {"class":"recipe-details-item prep-time"}).find("span", {"class": "prep-time-amount"})
+        prep_time_hours = line.find("div", {"class":"recipe-details-item prep-time"}).contents[1].contents[0]
+        prep_time_hours = int(re.sub(r'\s', '', str(prep_time_hours)))
+        
+        prep_time_min = line.find("div", {"class":"recipe-details-item prep-time"}).contents[1].contents[2]
+        prep_time_min = int(re.sub(r'\s', '', str(prep_time_min)))
         # delish separates it into hours and min -> need to parse properly
-        total_time = line.find("span", {"class":"recipe-details-item total-time"}).find("span", {"class": "total-time-amount"})
-        servings = line.find("div", {"class":"recipe-details-item yields"}).find("span", {"class": "recipe-details-item yields"})
-        # not currently finding it correctly
-        print("prep time: ", prep_time, "\ntotal time: ", total_time, "\nservings: ", servings)
-    # not yet implemented
+        
+        prep_time = prep_time_hours*60 + prep_time_min
+
+        total_time_hours = line.find("div", {"class":"recipe-details-item total-time"}).contents[1].contents[0] # "span", "total-time-amount"
+        total_time_hours = int(re.sub(r'\s', '', str(total_time_hours)))
+
+        total_time_min = line.find("div", {"class":"recipe-details-item total-time"}).contents[1].contents[2]
+        total_time_min = int(re.sub(r'\s', '', str(total_time_min)))
+
+        total_time = total_time_hours*60 + total_time_min
+
+        servings = line.find("div", {"class":"recipe-details-item yields"}).contents[1].contents[0] # "span", "recipe-details-item yields"
+        servings = int(re.sub(r'\s', '', str(servings)))
+    
     # should have option to display in hours, min, or mixed (round if necessary)
     # option to display one step at a time or to show all steps at once
 
-    directions = ""
-    #attributes = [ingredients, prep_time, total_time, servings, directions]
-    #return attributes
-    return [0,1,2,3,4]
+    directions = [] # list of strings where each string is a step
+    for dir in str(recipe_text.find("div", {"class": "direction-lists"})).split("<li>"):
+        directions.append(re.sub(r'<[a-zA-Z<>/]*>', '', dir))
+    directions.pop(0) # gets rid of the div label
+
+    # not yet implemented
+    attributes = [ingredients, prep_time, total_time, servings, directions]
+    # works properly; everything sent in integer form except for directions and ingredients
+    # stored in terms of minutes (not mixed time) to make searching by longest time easier
+    return attributes
 
 
 # can include measurement conversion (ex: tbsp to tsp or to ml or smth)
@@ -245,20 +273,49 @@ def all_recipes_search_scrape(keywords, recipe_bank):
     #    print(recipe)
     # does infinite scrolling, not a 'load more' page
 
+def all_recipes_recipe_scrape(all_recipes_link):
+    recipe_pull = urlopen(all_recipes_link)
+    recipe_text = Soup(recipe_pull.read(), "html.parser")
+    recipe_pull.close()
+    ingredients = []
+    for line in recipe_text.find("li", {"class":"ingredients-item"}):
+        if line.find("input"):
+            print(re.search(r"[.]*data-ingredient=[.]*", str(line)))
+        # print(line.find("input")["data-ingredients"])
+        # amount = line.find("data-quantity") #["data-quantity"]
+        # item = "c" #["data-ingredient"]
+        # print("Amount: ", amount)
+        # print("Item: ", item)
+        # amount, item
+    # gets ingredient details
+
+    # gets time-based details and serving details
+    
+    # should have option to display in hours, min, or mixed (round if necessary)
+    # option to display one step at a time or to show all steps at once
+
+    
+    # not yet implemented
+    # attributes = [ingredients, prep_time, total_time, servings, directions]
+    attributes = [[], 0, 1, 2, []]
+    # works properly; everything sent in integer form except for directions and ingredients
+    # stored in terms of minutes (not mixed time) to make searching by longest time easier
+    return attributes
+
+
 # need to streamline to make more compact (since lots of same text in scraping different types of recipe websites)
 # could make the type of website a switch or just cycle through all of them
 
 
 
 recipes = []
-# all_recipes_search_scrape(["chicken"], recipes)
-delish_search_scrape(["chicken"], recipes)
-print(recipes[0])
-# delish_recipe_scrape(recipes[0])
+all_recipes_search_scrape(["chicken"], recipes)
+print("zeroth: ", recipes[0])
+all_recipes_recipe_scrape(recipes[0].get_link())
 
 
 # currently able to find things on pg. one
-# need to find ingredients and read recipe page (works for delish)
+# need to find ingredients and read recipe page (need to implement for all recipes)
 # for each recipe:
 # ingredients (works for delish)
 # process
@@ -266,3 +323,5 @@ print(recipes[0])
 # time to cook
 # servings
 # need to look past Delish "load more" button and All Recipes infinite scrolling
+
+# need to test the recipe scrape functions for things past the first recipe
