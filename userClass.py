@@ -11,7 +11,6 @@ class userClass:
         self.email = email
         self.hsh = hash(name+email)
 
-
     def __eq__(self, o: object):
         if(self.email==o.email):
             return True
@@ -24,6 +23,13 @@ class userClass:
     def addCuisi(cList):
         cuisiList = cList
     
+
+    def getName(self):
+        return self.name
+
+    def getEmail(self):
+        return self.email
+
     def getFoods(self):
         return self.foodList
     
@@ -31,5 +37,5 @@ class userClass:
         return self.cuisiList
     
     def getHash(self):
-        return self.hsh
+        return str(self.hsh)
 
