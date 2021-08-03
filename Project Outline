@@ -1,0 +1,27 @@
+Goal: Create a recipe generator that sends a unique recipe every day to subscribed email.
+
+Meals are saved in a text file. 
+
+Rules (customizable by user):
+- No back-to-back same Meals
+- No consecutive CULTURE in recipes (Cannot have Chinese twice)
+- 
+
+Contents must include: 
+- Cultural origin (Chinese, Indian, etc.)
+- Time to cook
+- Estimated price 
+- Ingredients + Instructions OR Recipe Link
+
+
+
+# choices to catalogue by ingredient, food type (ex: vegetarian), cooking method, culture, time to cook / prep, price (expand on later)
+# send email ~ twitter bot
+# UI for rules, emails, etc.
+# choices to add rules (ex: no back to back of the same category, how many times you can eat something of some type, etc.)
+# saves previous options in text file of some sort
+# can categorize recipes w/ 
+# option to send whole recipe or send link to recipe
+# webscraper for recipes (could do specific website or first 10 google results)
+# person can add own recipe
+# ability to save recipes

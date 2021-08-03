@@ -1,0 +1,33 @@
+Possible websites:
+
+This is what a general DIY web scraping process looks like:
+
+    - Identify the target website
+    - Collect URLs of the pages where you want to extract data from
+    - Make a request to these URLs to get the HTML of the page
+    - Use locators to find the data in the HTML
+    - Save the data in a JSON or CSV file or some other structured format
+
+But unfortunately, there are quite a few challenges you need to tackle if you need data at scale. 
+For example, maintaining the scraper if the website layout changes, managing proxies, executing javascript, 
+or working around antibots. These are all deeply technical problems that can eat up a lot of resources
+>> small project = don't need to worry about this
+
+An important part of every scraper is the data locators (or selectors) that are used to find the data 
+that you want to extract from the HTML file - usually, XPath, CSS selectors, regex, or a combination of them is applied.
+
+www.allrecipes.com
+www.delish.com
+www.epicurious.com
+www.food.com
+
+# use the Beautiful Soup python package
+
+--> how to do it:
+* find attributes desired (ex: ingredients)
+* need to normalize all caps (ex: all lowercase & disregard punctuation)
+* 
+
+# https://www.delish.com/search/?q=chicken+yogurt
+# delish does infinite scrolling with a "load more" button --> need to account for that
+
