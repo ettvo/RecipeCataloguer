@@ -1,3 +1,4 @@
+from hashlib import sha1
 class userClass:
 
     name = ""
@@ -9,7 +10,7 @@ class userClass:
     def __init__(self, name, email):
         self.name = name
         self.email = email
-        self.hsh = hash(name+email)
+        self.hsh = sha1(name+email)
 
     def __eq__(self, o: object):
         if(self.email==o.email):

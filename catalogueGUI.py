@@ -1,6 +1,7 @@
 import datetime as dt, tkinter as tk, os, pickle
 from userClass import userClass
 from userDict import userDict
+from hashlib import sha1
 
 testUser = userClass("Karyn", "karynpham@gmail.com")
 d = userDict()
@@ -42,7 +43,7 @@ class Frame1(tk.Frame):
 
         # For returning users, checks for their identification in dictionary
         def userVerify(name, email):
-            hsh = hash(name + email)
+            hsh = sha1(name+email)
             if (not d.doesExist(hsh)):
                 #emailVerify(name, email)
                 newUser = userClass(name, email)
@@ -105,7 +106,7 @@ class Frame2(tk.Frame):
                 print(food)
 
 
-        tk.Label(f2, text="Hello, {name}!".format(name = lambda: currUser.getName if (currUser) else "User") + '\n' + "Please enter your food preferences below." 
+        tk.Label(f2, text="Hello, {name}!".format(name = (lambda: currUser.getName() if (currUser) else "User")) + '\n' + "Please enter your food preferences below." 
             + '\n' + "Be sure to seperate each entry with a comma (ex. chicken, salad).").grid(row=0, columnspan=2)
         tk.Label(f2, 
                 text="Food Preferences").grid(row=1, column=0)

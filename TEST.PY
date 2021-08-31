@@ -1,7 +1,11 @@
-name = "non"
-email = "sdjsad"
-hsh = hash(name+email)
+from hashlib import sha1
+name = 'non'
+email = 'sdjsad'
+shaOne = sha1()
+shaTwo = sha1()
 
-hsh2 = hash(name+email)
+hsh = sha1((name+email).encode('utf-8'))
+
+hsh2 = sha1((name+email).encode('utf-8'))
 
 print(hsh)
