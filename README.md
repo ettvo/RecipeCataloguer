@@ -1,4 +1,6 @@
-# RecipeCataloguer-
+# RecipeCataloguer
+A Java webscraper that catalogues recipes from certain websites online and displays them to the user according to the settings and filter they configured.
+
 Sends recipes to subscribed emails every morning.
 
 OUTLINE: 
